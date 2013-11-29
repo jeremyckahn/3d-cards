@@ -35,6 +35,7 @@ define([
 
     ,buildLayer: function (z) {
       var $layer = $(document.createElement('div'));
+      $layer.addClass('card-layer');
       this._card$els[z] = {};
       this._$layers.append($layer);
 

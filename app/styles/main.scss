@@ -3,19 +3,47 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import 'sass-bootstrap/lib/bootstrap';
 @import "compass/css3/transform";
 
+$CARD_WIDTH: 300px;
+$CARD_HEIGHT: 200px;
+
 .cards-container {
   position: relative;
 }
 
 .card-layers {
-  position: absolute;
+  position: relative;
+  width: $CARD_WIDTH * 4;
 }
 
+  .card-layer {
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+
 .card {
+  background: #f0f;
+  float: left;
+  height: $CARD_HEIGHT;
+  width: $CARD_WIDTH;
+}
+
+.card:nth-child(4n + 1) {
+  clear: left;
+}
+
+.card-layer:nth-child(1) .card {
   background: #f00;
-  height: 200px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 300px;
+}
+
+.card-layer:nth-child(2) .card {
+  background: #0f0;
+}
+
+.card-layer:nth-child(3) .card {
+  background: #00f;
+}
+
+.card-layer:nth-child(4) .card {
+  background: #ff8;
 }
