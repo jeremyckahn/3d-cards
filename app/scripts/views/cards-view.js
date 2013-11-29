@@ -27,13 +27,16 @@ define([
 
     ,initialize: function () {
       this._card$els = {};
+      this._$layers = $(document.createElement('div'));
+      this._$layers.addClass('card-layers');
       _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
+      this.$el.append(this._$layers);
     }
 
     ,buildLayer: function (z) {
       var $layer = $(document.createElement('div'));
       this._card$els[z] = {};
-      this.$el.append($layer);
+      this._$layers.append($layer);
 
       _.range(COLUMNS).forEach(_.bind(this.buildColumn, this, z));
     }
@@ -46,8 +49,9 @@ define([
 
     ,buildRow: function (z, y, x) {
       var $card = $(document.createElement('div'));
+      $card.addClass('card');
       this._card$els[z][y][x] = $card;
-      this.$el.children().eq(z).append($card);
+      this._$layers.children().eq(z).append($card);
     }
   });
 

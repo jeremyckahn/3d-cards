@@ -41,6 +41,6 @@ require([
   Backbone.history.start();
 
   new CardsView({
-    el: document.querySelector('.cards')
+    el: document.querySelector('.cards-container')
   });
 });
