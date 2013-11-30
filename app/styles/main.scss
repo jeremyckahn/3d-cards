@@ -10,13 +10,15 @@ $CARD_MARGIN_Y: 15px;
 
 .cards-container {
   position: relative;
-  @include perspective(1000px);
-  @include transform-style(preserve-3d);
 }
 
 .card-layers {
+  height: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * 4;
   position: relative;
   width: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * 4;
+  @include perspective(1000px);
+  @include perspective-origin(50% 50%);
+  @include transform-style(preserve-3d);
 }
 
   .card-layer {
