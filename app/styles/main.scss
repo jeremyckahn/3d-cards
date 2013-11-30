@@ -36,34 +36,18 @@ $CARD_MARGIN_Y: 15px;
   clear: left;
 }
 
-.card-layer:nth-child(1) {
-  @include transform(translateZ(0px));
+.card-layer:nth-child(1) .card {
+  background: #f00;
 }
 
-  .card-layer:nth-child(1) .card {
-    background: #f00;
-  }
-
-.card-layer:nth-child(2) {
-  @include transform(translateZ(-100px));
+.card-layer:nth-child(2) .card {
+  background: #0f0;
 }
 
-  .card-layer:nth-child(2) .card {
-    background: #0f0;
-  }
-
-.card-layer:nth-child(3) {
-  @include transform(translateZ(-200px));
+.card-layer:nth-child(3) .card {
+  background: #00f;
 }
 
-  .card-layer:nth-child(3) .card {
-    background: #00f;
-  }
-
-.card-layer:nth-child(4) {
-  @include transform(translateZ(-300px));
+.card-layer:nth-child(4) .card {
+  background: #ff8;
 }
-
-  .card-layer:nth-child(4) .card {
-    background: #ff8;
-  }

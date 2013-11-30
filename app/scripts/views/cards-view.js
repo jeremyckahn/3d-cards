@@ -21,6 +21,7 @@ define([
   var ROWS = 4;
   var COLUMNS = 4;
   var LAYERS = 4;
+  var ZOOM_PIXELS = 100;
 
   var CardsView = Backbone.View.extend({
     template: JST['app/scripts/templates/cards-tmpl.ejs']
@@ -36,6 +37,7 @@ define([
     ,buildLayer: function (z) {
       var $layer = $(document.createElement('div'));
       $layer.addClass('card-layer');
+      $layer.css('transform', 'translateZ(' + -(z * ZOOM_PIXELS) + 'px)');
       this._card$els[z] = {};
       this._$layers.append($layer);
 
