@@ -3,16 +3,20 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import 'sass-bootstrap/lib/bootstrap';
 @import "compass/css3/transform";
 
-$CARD_WIDTH: 300px;
-$CARD_HEIGHT: 200px;
+$CARD_WIDTH: 150px;
+$CARD_HEIGHT: 100px;
+$CARD_MARGIN_X: 25px;
+$CARD_MARGIN_Y: 15px;
 
 .cards-container {
   position: relative;
+  @include perspective(1000px);
+  @include transform-style(preserve-3d);
 }
 
 .card-layers {
   position: relative;
-  width: $CARD_WIDTH * 4;
+  width: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * 4;
 }
 
   .card-layer {
@@ -24,6 +28,7 @@ $CARD_HEIGHT: 200px;
 .card {
   background: #f0f;
   float: left;
+  margin: $CARD_MARGIN_Y $CARD_MARGIN_X;
   height: $CARD_HEIGHT;
   width: $CARD_WIDTH;
 }
@@ -32,18 +37,34 @@ $CARD_HEIGHT: 200px;
   clear: left;
 }
 
-.card-layer:nth-child(1) .card {
-  background: #f00;
+.card-layer:nth-child(1) {
+  @include transform(translateZ(0px));
 }
 
-.card-layer:nth-child(2) .card {
-  background: #0f0;
+  .card-layer:nth-child(1) .card {
+    background: #f00;
+  }
+
+.card-layer:nth-child(2) {
+  @include transform(translateZ(-100px));
 }
 
-.card-layer:nth-child(3) .card {
-  background: #00f;
+  .card-layer:nth-child(2) .card {
+    background: #0f0;
+  }
+
+.card-layer:nth-child(3) {
+  @include transform(translateZ(-200px));
 }
 
-.card-layer:nth-child(4) .card {
-  background: #ff8;
+  .card-layer:nth-child(3) .card {
+    background: #00f;
+  }
+
+.card-layer:nth-child(4) {
+  @include transform(translateZ(-300px));
 }
+
+  .card-layer:nth-child(4) .card {
+    background: #ff8;
+  }

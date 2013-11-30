@@ -32,14 +32,6 @@ module.exports = function (grunt) {
         nospawn: true,
         livereload: true
       },
-      coffee: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
-        tasks: ['coffee:dist']
-      },
-      coffeeTest: {
-        files: ['test/spec/{,*/}*.coffee'],
-        tasks: ['coffee:test']
-      },
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass']
@@ -56,16 +48,6 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/scripts/templates/*.{ejs,mustache,hbs}',
           'test/spec/**/*.js'
         ]
-      },
-      jst: {
-        files: [
-          '<%= yeoman.app %>/scripts/templates/*.ejs'
-        ],
-        tasks: ['jst']
-      },
-      test: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js', 'test/spec/**/*.js'],
-        tasks: ['test']
       }
     },
     connect: {
