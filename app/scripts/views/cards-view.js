@@ -58,10 +58,13 @@ define([
       var transformX = (x * this._sampledCardWidth) + 'px';
       var transformY = (y * this._sampledCardHeight) + 'px';
       var transformZ = (z * -LAYER_DEPTH) + 'px';
-      $card.css('transform',
-          'translate3d(' + transformX + ', ' + transformY + ', ' + transformZ +
-          ')');
-      $card.attr('data-layer', z);
+      this.applyTransform3d($card, transformX, transformY, transformZ);
+      $card.attr({
+        'data-layer': z
+        ,'data-x': transformX
+        ,'data-y': transformY
+        ,'data-z': transformZ
+      });
 
       this._card$els[z][y][x] = $card;
       this.$el.append($card);
@@ -75,6 +78,16 @@ define([
       this._sampledCardWidth = $card.outerWidth(true);
       this._sampledCardHeight = $card.outerHeight(true);
       $card.remove();
+    }
+
+    /**
+     * @param {jQuery} $card
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z
+     */
+    ,applyTransform3d: function ($el, x, y, z) {
+      $el.css('transform', 'translate3d(' + x + ', ' + y + ', ' + z + ')');
     }
   });
 
