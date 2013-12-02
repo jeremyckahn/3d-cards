@@ -5,14 +5,12 @@ define([
   'jquery'
   ,'underscore'
   ,'backbone'
-  ,'templates'
 
 ], function (
 
   $
   ,_
   ,Backbone
-  ,JST
 
 ) {
 
@@ -24,7 +22,9 @@ define([
   var LAYER_DEPTH = 100;
 
   var CardsView = Backbone.View.extend({
-    template: JST['app/scripts/templates/cards-tmpl.ejs']
+    events: {
+      'mousewheel': 'onMouseWheel'
+    }
 
     ,initialize: function () {
       // TODO: For debugging.  Remove this.
@@ -113,6 +113,14 @@ define([
       }
 
       this.$el.show();
+    }
+
+    /**
+     * @param {jQuery.Event} evt
+     */
+    ,onMouseWheel: function (evt) {
+      evt.preventDefault();
+      this.zoomIn(evt.deltaY);
     }
   });
 
