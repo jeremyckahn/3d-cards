@@ -8,11 +8,8 @@ $NUM_ROWS: 2;
 $NUM_COLS: 2;
 
 .cards-container {
-  position: relative;
-}
-
-.card-layers {
   height: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
+  margin: 0 auto;
   position: relative;
   width: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * $NUM_COLS;
   @include perspective(1000px);
@@ -20,16 +17,29 @@ $NUM_COLS: 2;
   @include transform-style(preserve-3d);
 }
 
-  .card-layer {
-    left: 0;
-    position: absolute;
-    top: 0;
-  }
-
 .card {
   background: #f0f;
   float: left;
-  margin: $CARD_MARGIN_Y $CARD_MARGIN_X;
   height: $CARD_HEIGHT;
+  left: 0;
+  margin: $CARD_MARGIN_Y $CARD_MARGIN_X;
+  position: absolute;
+  top: 0;
   width: $CARD_WIDTH;
+}
+
+.card[data-layer="0"] {
+  background: #f00;
+}
+
+.card[data-layer="1"] {
+  background: #0f0;
+}
+
+.card[data-layer="2"] {
+  background: #00f;
+}
+
+.card[data-layer="3"] {
+  background: #f90;
 }
