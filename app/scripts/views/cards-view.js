@@ -28,18 +28,11 @@ define([
 
     ,initialize: function () {
       this._card$els = {};
-      this._$layers = $(document.createElement('div'));
-      this._$layers.addClass('card-layers');
       _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
-      this.$el.append(this._$layers);
     }
 
     ,buildLayer: function (z) {
-      var $layer = $(document.createElement('div'));
-      $layer.addClass('card-layer');
-      $layer.css('transform', 'translateZ(' + -(z * ZOOM_PIXELS) + 'px)');
       this._card$els[z] = {};
-      this._$layers.append($layer);
 
       _.range(COLUMNS).forEach(_.bind(this.buildColumn, this, z));
     }
@@ -54,7 +47,7 @@ define([
       var $card = $(document.createElement('div'));
       $card.addClass('card');
       this._card$els[z][y][x] = $card;
-      this._$layers.children().eq(z).append($card);
+      this.$el.append($card);
     }
   });
 

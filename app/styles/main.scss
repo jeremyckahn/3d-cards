@@ -33,23 +33,3 @@ $NUM_COLS: 2;
   height: $CARD_HEIGHT;
   width: $CARD_WIDTH;
 }
-
-.card:nth-child(2n + 1) {
-  clear: left;
-}
-
-.card-layer:nth-child(1) .card {
-  background: #f00;
-}
-
-.card-layer:nth-child(2) .card {
-  background: #0f0;
-}
-
-.card-layer:nth-child(3) .card {
-  background: #00f;
-}
-
-.card-layer:nth-child(4) .card {
-  background: #ff8;
-}
