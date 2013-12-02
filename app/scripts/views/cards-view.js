@@ -27,12 +27,14 @@ define([
     template: JST['app/scripts/templates/cards-tmpl.ejs']
 
     ,initialize: function () {
+      // TODO: For debugging.  Remove this.
+      window.cardView = this;
+
       this._card$els = {};
       this._sampledCardWidth = null;
       this._sampledCardHeight = null;
 
       _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
-      console.log(this._sampledCardWidth, this._sampledCardHeight);
     }
 
     ,buildLayer: function (z) {
@@ -55,9 +57,9 @@ define([
         this.measureAndStoreCardDimensions($card);
       }
 
-      var transformX = (x * this._sampledCardWidth) + 'px';
-      var transformY = (y * this._sampledCardHeight) + 'px';
-      var transformZ = (z * -LAYER_DEPTH) + 'px';
+      var transformX = x * this._sampledCardWidth;
+      var transformY = y * this._sampledCardHeight;
+      var transformZ = z * -LAYER_DEPTH;
       this.applyTransform3d($card, transformX, transformY, transformZ);
       $card.attr({
         'data-layer': z
@@ -87,7 +89,30 @@ define([
      * @param {number} z
      */
     ,applyTransform3d: function ($el, x, y, z) {
-      $el.css('transform', 'translate3d(' + x + ', ' + y + ', ' + z + ')');
+      $el.css('transform',
+          'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)');
+    }
+
+    /**
+     * @param {number} zoomDelta
+     */
+    ,zoomIn: function (zoomDelta) {
+      this.$el.hide();
+
+      var $cards = this.$el.children();
+      var i = 0, len = $cards.length;
+      var $card, x, y, z, newZ;
+      for (i; i < len; i++) {
+        $card = $cards.eq(i);
+        x = +$card.attr('data-x');
+        y = +$card.attr('data-y');
+        z = +$card.attr('data-z');
+        newZ = z + zoomDelta;
+        this.applyTransform3d($card, x, y, newZ);
+        $card.attr('data-z', newZ);
+      }
+
+      this.$el.show();
     }
   });
 
