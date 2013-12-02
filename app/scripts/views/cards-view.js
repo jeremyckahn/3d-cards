@@ -18,8 +18,8 @@ define([
 
   'use strict';
 
-  var ROWS = 4;
-  var COLUMNS = 4;
+  var ROWS = 2;
+  var COLUMNS = 2;
   var LAYERS = 4;
   var ZOOM_PIXELS = 100;
 
