@@ -28,7 +28,11 @@ define([
 
     ,initialize: function () {
       this._card$els = {};
+      this._sampledCardWidth = null;
+      this._sampledCardHeight = null;
+
       _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
+      console.log(this._sampledCardWidth, this._sampledCardHeight);
     }
 
     ,buildLayer: function (z) {
@@ -46,8 +50,23 @@ define([
     ,buildRow: function (z, y, x) {
       var $card = $(document.createElement('div'));
       $card.addClass('card');
+
+      if (this._sampledCardWidth === null) {
+        this.measureAndStoreCardDimensions($card);
+      }
+
       this._card$els[z][y][x] = $card;
       this.$el.append($card);
+    }
+
+    /**
+     * @param {jQuery} $card
+     */
+    ,measureAndStoreCardDimensions: function ($card) {
+      this.$el.append($card);
+      this._sampledCardWidth = $card.outerWidth(true);
+      this._sampledCardHeight = $card.outerHeight(true);
+      $card.remove();
     }
   });
 
