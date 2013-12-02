@@ -256,16 +256,6 @@ module.exports = function (grunt) {
         rjsConfig: '<%= yeoman.app %>/scripts/main.js'
       }
     },
-    jst: {
-      options: {
-        amd: true
-      },
-      compile: {
-        files: {
-          '.tmp/scripts/templates.js': ['<%= yeoman.app %>/scripts/templates/*.ejs']
-        }
-      }
-    },
     rev: {
       dist: {
         files: {
@@ -281,10 +271,6 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('createDefaultTemplate', function () {
-    grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');
-  });
-
   grunt.registerTask('server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
@@ -294,8 +280,6 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'coffee',
-        'createDefaultTemplate',
-        'jst',
         'compass:server',
         'connect:test',
         'watch:livereload'
@@ -305,8 +289,6 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'coffee:dist',
-      'createDefaultTemplate',
-      'jst',
       'compass:server',
       'connect:livereload',
       //'open',
@@ -317,8 +299,6 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'clean:server',
     'coffee',
-    'createDefaultTemplate',
-    'jst',
     'compass',
     'connect:test',
     'mocha',
@@ -328,8 +308,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'coffee',
-    'createDefaultTemplate',
-    'jst',
     'compass:dist',
     'useminPrepare',
     'requirejs',
