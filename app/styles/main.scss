@@ -11,9 +11,10 @@ $CARD_CONTAINER_WIDTH: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * $NUM_COLS;
 $CARD_CONTAINER_HEIGHT: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
 .cards-container {
   height: $CARD_CONTAINER_HEIGHT;
-  margin: 50% auto 0;
-  position: relative;
-  top: -($CARD_CONTAINER_HEIGHT / 2);
+  left: 50%;
+  margin: (-$CARD_CONTAINER_HEIGHT / 2) 0 0 (-$CARD_CONTAINER_WIDTH / 2);
+  position: absolute;
+  top: 50%;
   width: $CARD_CONTAINER_WIDTH;
   @include perspective(1000px);
   @include perspective-origin(50% 50%);
