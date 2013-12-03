@@ -7,11 +7,14 @@ $CARD_MARGIN_Y: 15px;
 $NUM_ROWS: 2;
 $NUM_COLS: 2;
 
+$CARD_CONTAINER_WIDTH: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * $NUM_COLS;
+$CARD_CONTAINER_HEIGHT: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
 .cards-container {
-  height: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
-  margin: 0 auto;
+  height: $CARD_CONTAINER_HEIGHT;
+  margin: 50% auto 0;
   position: relative;
-  width: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * $NUM_COLS;
+  top: -($CARD_CONTAINER_HEIGHT / 2);
+  width: $CARD_CONTAINER_WIDTH;
   @include perspective(1000px);
   @include perspective-origin(50% 50%);
   @include transform-style(preserve-3d);
