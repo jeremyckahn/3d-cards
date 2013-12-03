@@ -19,7 +19,8 @@ define([
   var ROWS = 2;
   var COLUMNS = 2;
   var LAYERS = 4;
-  var LAYER_DEPTH = 100;
+  var LAYER_DEPTH = 500;
+  var Z_FADE_THRESHOLD = 1000;
 
   var CardsView = Backbone.View.extend({
     initialize: function () {
@@ -91,6 +92,23 @@ define([
     }
 
     /**
+     * @param {jQuery} $card
+     * @param {number} z
+     */
+    ,applyZFade: function ($card, z) {
+      var opacity;
+      if (z < 0) {
+        opacity = 1;
+      } else {
+        var boundedOpacity =
+            Math.min(1, (z / Z_FADE_THRESHOLD));
+        opacity = 1 - boundedOpacity;
+      }
+
+      $card.css('opacity', opacity);
+    }
+
+    /**
      * @param {number} zoomDelta
      */
     ,zoomIn: function (zoomDelta) {
@@ -106,6 +124,7 @@ define([
         z = +$card.attr('data-z');
         newZ = z + zoomDelta;
         this.applyTransform3d($card, x, y, newZ);
+        this.applyZFade($card, newZ);
         $card.attr('data-z', newZ);
       }
 
