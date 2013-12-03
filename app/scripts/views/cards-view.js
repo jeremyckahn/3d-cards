@@ -22,11 +22,7 @@ define([
   var LAYER_DEPTH = 100;
 
   var CardsView = Backbone.View.extend({
-    events: {
-      'mousewheel': 'onMouseWheel'
-    }
-
-    ,initialize: function () {
+    initialize: function () {
       // TODO: For debugging.  Remove this.
       window.cardView = this;
 
@@ -35,6 +31,7 @@ define([
       this._sampledCardHeight = null;
 
       _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
+      $(window).on('mousewheel', _.bind(this.onWindowMouseWheel, this));
     }
 
     ,buildLayer: function (z) {
@@ -118,7 +115,7 @@ define([
     /**
      * @param {jQuery.Event} evt
      */
-    ,onMouseWheel: function (evt) {
+    ,onWindowMouseWheel: function (evt) {
       evt.preventDefault();
       this.zoomIn(evt.deltaY);
     }
