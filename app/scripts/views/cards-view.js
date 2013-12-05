@@ -122,13 +122,25 @@ define([
         x = +$card.attr('data-x');
         y = +$card.attr('data-y');
         z = +$card.attr('data-z');
-        newZ = z + zoomDelta;
+        newZ = this.cycleZ(z + zoomDelta);
         this.applyTransform3d($card, x, y, newZ);
         this.applyZFade($card, newZ);
         $card.attr('data-z', newZ);
       }
 
       this.$el.show();
+    }
+
+    /**
+     * @param {number} unboundedZ
+     * @return {number}
+     */
+    ,cycleZ: function (unboundedZ) {
+      if (unboundedZ > Z_FADE_THRESHOLD) {
+        unboundedZ -= LAYER_DEPTH * (LAYERS);
+      }
+
+      return unboundedZ;
     }
 
     /**
