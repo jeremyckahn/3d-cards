@@ -20,7 +20,7 @@ define([
   var COLUMNS = 2;
   var LAYERS = 4;
   var LAYER_DEPTH = 500;
-  var Z_FADE_THRESHOLD = 1000;
+  var Z_CLOSE_FADE_THRESHOLD = 1000;
 
   var CardsView = Backbone.View.extend({
     initialize: function () {
@@ -101,7 +101,7 @@ define([
         opacity = 1;
       } else {
         var boundedOpacity =
-            Math.min(1, (z / Z_FADE_THRESHOLD));
+            Math.min(1, (z / Z_CLOSE_FADE_THRESHOLD));
         opacity = 1 - boundedOpacity;
       }
 
@@ -136,8 +136,12 @@ define([
      * @return {number}
      */
     ,cycleZ: function (unboundedZ) {
-      if (unboundedZ > Z_FADE_THRESHOLD) {
-        unboundedZ -= LAYER_DEPTH * (LAYERS);
+      var totalDepth = LAYER_DEPTH * LAYERS;
+      if (unboundedZ > Z_CLOSE_FADE_THRESHOLD) {
+        unboundedZ -= totalDepth;
+      } else if (unboundedZ < -totalDepth) {
+        // TODO: This is broken.
+        unboundedZ = Z_CLOSE_FADE_THRESHOLD - (-totalDepth - unboundedZ);
       }
 
       return unboundedZ;
