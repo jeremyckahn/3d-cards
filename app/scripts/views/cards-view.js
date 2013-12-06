@@ -20,7 +20,7 @@ define([
   var COLUMNS = 2;
   var LAYERS = 4;
   var LAYER_DEPTH = 500;
-  var Z_CLOSE_FADE_THRESHOLD = 1000;
+  var Z_FADE_THRESHOLD = LAYER_DEPTH * (LAYERS * 0.5);
 
   var CardsView = Backbone.View.extend({
     initialize: function () {
@@ -32,6 +32,7 @@ define([
       this._sampledCardHeight = null;
 
       _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
+      this.zoom(0);
       $(window).on('mousewheel', _.bind(this.onWindowMouseWheel, this));
     }
 
@@ -100,8 +101,7 @@ define([
       if (z < 0) {
         opacity = 1;
       } else {
-        var boundedOpacity =
-            Math.min(1, (z / Z_CLOSE_FADE_THRESHOLD));
+        var boundedOpacity = Math.min(1, (z / Z_FADE_THRESHOLD));
         opacity = 1 - boundedOpacity;
       }
 
@@ -111,7 +111,7 @@ define([
     /**
      * @param {number} zoomDelta
      */
-    ,zoomIn: function (zoomDelta) {
+    ,zoom: function (zoomDelta) {
       this.$el.hide();
 
       var $cards = this.$el.children();
@@ -136,12 +136,11 @@ define([
      * @return {number}
      */
     ,cycleZ: function (unboundedZ) {
-      var totalDepth = LAYER_DEPTH * LAYERS;
-      if (unboundedZ > Z_CLOSE_FADE_THRESHOLD) {
-        unboundedZ -= totalDepth;
-      } else if (unboundedZ < -totalDepth) {
-        // TODO: This is broken.
-        unboundedZ = Z_CLOSE_FADE_THRESHOLD - (-totalDepth - unboundedZ);
+      var doubledThreshold = Z_FADE_THRESHOLD * 2;
+      if (unboundedZ > Z_FADE_THRESHOLD) {
+        unboundedZ -= doubledThreshold;
+      } else if (unboundedZ < -Z_FADE_THRESHOLD) {
+        unboundedZ += doubledThreshold;
       }
 
       return unboundedZ;
@@ -152,7 +151,7 @@ define([
      */
     ,onWindowMouseWheel: function (evt) {
       evt.preventDefault();
-      this.zoomIn(evt.deltaY);
+      this.zoom(evt.deltaY);
     }
   });
 
