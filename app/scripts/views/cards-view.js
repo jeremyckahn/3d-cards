@@ -73,7 +73,9 @@ define([
      * @param {jQuery} $card
      */
     ,focusCard: function ($card) {
-      $card.data('isFocused', true);
+      this.$el.find('.card.focused').removeClass('focused');
+      this.zoom(0);
+      $card.addClass('focused');
       $card.css('opacity', 1);
       this.applyTransform3d($card, 0, 0, 0);
     }
@@ -82,7 +84,7 @@ define([
      * @param {jQuery} $card
      */
     ,blurCard: function ($card) {
-      $card.data('isFocused', false);
+      $card.removeClass('focused');
       this.zoom(0);
     }
 
@@ -174,7 +176,7 @@ define([
     ,onClickCard: function (evt) {
       var $card = $(evt.currentTarget);
 
-      if ($card.data('isFocused')) {
+      if ($card.hasClass('focused')) {
         this.blurCard($card);
       } else {
         this.focusCard($card);
