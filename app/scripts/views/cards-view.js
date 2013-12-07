@@ -19,7 +19,11 @@ define([
   var LAYER_DEPTH = 500;
 
   var CardsView = Backbone.View.extend({
-    initialize: function () {
+    events: {
+      'click .card': 'onClickCard'
+    }
+
+    ,initialize: function () {
       // TODO: For debugging.  Remove this.
       window.cardView = this;
 
@@ -63,6 +67,23 @@ define([
       });
 
       this._totalCards++;
+    }
+
+    /**
+     * @param {jQuery} $card
+     */
+    ,focusCard: function ($card) {
+      $card.data('isFocused', true);
+      $card.css('opacity', 1);
+      this.applyTransform3d($card, 0, 0, 0);
+    }
+
+    /**
+     * @param {jQuery} $card
+     */
+    ,blurCard: function ($card) {
+      $card.data('isFocused', false);
+      this.zoom(0);
     }
 
     /**
@@ -145,6 +166,19 @@ define([
     ,onWindowMouseWheel: function (evt) {
       evt.preventDefault();
       this.zoom(evt.deltaY);
+    }
+
+    /**
+     * @param {jQuery.Event} evt
+     */
+    ,onClickCard: function (evt) {
+      var $card = $(evt.currentTarget);
+
+      if ($card.data('isFocused')) {
+        this.blurCard($card);
+      } else {
+        this.focusCard($card);
+      }
     }
   });
 
