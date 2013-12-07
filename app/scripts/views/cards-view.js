@@ -140,9 +140,9 @@ define([
     ,cycleZ: function (unboundedZ) {
       var doubledThreshold = Z_FADE_DISTANCE * 2;
       if (unboundedZ > Z_FADE_DISTANCE) {
-        unboundedZ -= doubledThreshold;
+        return unboundedZ - doubledThreshold;
       } else if (unboundedZ < -Z_FADE_DISTANCE) {
-        unboundedZ += doubledThreshold;
+        return unboundedZ + doubledThreshold;
       }
 
       return unboundedZ;
