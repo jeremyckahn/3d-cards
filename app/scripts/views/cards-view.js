@@ -16,10 +16,10 @@ define([
 
   'use strict';
 
-  var ROWS = 2;
-  var COLUMNS = 2;
-  var LAYERS = 4;
-  var LAYER_DEPTH = 1000;
+  var ROWS = 1;
+  var COLUMNS = 1;
+  var LAYERS = 8;
+  var LAYER_DEPTH = 500;
   var Z_FADE_DISTANCE = LAYER_DEPTH * (LAYERS * 0.5);
 
   var CardsView = Backbone.View.extend({
@@ -27,6 +27,7 @@ define([
       // TODO: For debugging.  Remove this.
       window.cardView = this;
 
+      this._totalCards = 0;
       this._card$els = {};
       this._sampledCardWidth = null;
       this._sampledCardHeight = null;
@@ -38,13 +39,11 @@ define([
 
     ,buildLayer: function (z) {
       this._card$els[z] = {};
-
       _.range(COLUMNS).forEach(_.bind(this.buildColumn, this, z));
     }
 
     ,buildColumn: function (z, y) {
       this._card$els[z][y] = {};
-
       _.range(ROWS).forEach(_.bind(this.buildRow, this, z, y));
     }
 
@@ -56,19 +55,23 @@ define([
         this.measureAndStoreCardDimensions($card);
       }
 
-      var transformX = x * this._sampledCardWidth;
-      var transformY = y * this._sampledCardHeight;
+      var totalCards = this._totalCards;
+      var quadrant = totalCards % 4;
+      var transformX =
+          (quadrant === 0 || quadrant === 2) ? -100 : 100;
+      var transformY = (quadrant < 2) ? -100 : 100;
       var transformZ = z * -LAYER_DEPTH;
-      this.applyTransform3d($card, transformX, transformY, transformZ);
+      this.applyTransform3d(
+          $card, transformX + '%', transformY + '%', transformZ + 'px');
       $card.attr({
-        'data-layer': z
-        ,'data-x': transformX
+        'data-x': transformX
         ,'data-y': transformY
         ,'data-z': transformZ
       });
 
       this._card$els[z][y][x] = $card;
       this.$el.append($card);
+      this._totalCards++;
     }
 
     /**
@@ -88,8 +91,7 @@ define([
      * @param {number} z
      */
     ,applyTransform3d: function ($el, x, y, z) {
-      $el.css('transform',
-          'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)');
+      $el.css('transform', 'translate3d(' + x + ', ' + y + ', ' + z + ')');
     }
 
     /**
@@ -119,11 +121,11 @@ define([
       var $card, x, y, z, newZ;
       for (i; i < len; i++) {
         $card = $cards.eq(i);
-        x = +$card.attr('data-x');
-        y = +$card.attr('data-y');
+        x = +$card.attr('data-x') + '%';
+        y = +$card.attr('data-y') + '%';
         z = +$card.attr('data-z');
         newZ = this.cycleZ(z + zoomDelta);
-        this.applyTransform3d($card, x, y, newZ);
+        this.applyTransform3d($card, x, y, newZ + 'px');
         this.applyZFade($card, newZ);
         $card.attr('data-z', newZ);
       }

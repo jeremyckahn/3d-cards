@@ -4,8 +4,8 @@ $CARD_WIDTH: 150px;
 $CARD_HEIGHT: 100px;
 $CARD_MARGIN_X: 25px;
 $CARD_MARGIN_Y: 15px;
-$NUM_ROWS: 2;
-$NUM_COLS: 2;
+$NUM_ROWS: 1;
+$NUM_COLS: 1;
 
 $CARD_CONTAINER_WIDTH: ($CARD_WIDTH + ($CARD_MARGIN_X * 2)) * $NUM_COLS;
 $CARD_CONTAINER_HEIGHT: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
@@ -22,7 +22,8 @@ $CARD_CONTAINER_HEIGHT: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
 }
 
 .card {
-  background: #f0f;
+  background: #ff8;
+  border: solid 1px #000;
   float: left;
   height: $CARD_HEIGHT;
   left: 0;
@@ -30,20 +31,4 @@ $CARD_CONTAINER_HEIGHT: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
   position: absolute;
   top: 0;
   width: $CARD_WIDTH;
-}
-
-.card[data-layer="0"] {
-  background: #f00;
-}
-
-.card[data-layer="1"] {
-  background: #0f0;
-}
-
-.card[data-layer="2"] {
-  background: #00f;
-}
-
-.card[data-layer="3"] {
-  background: #f90;
 }
