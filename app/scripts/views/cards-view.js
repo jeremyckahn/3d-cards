@@ -30,6 +30,7 @@ define([
 
       this.initCards();
       this.zoom(0);
+
       $(window).on('mousewheel', _.bind(this.onWindowMouseWheel, this));
     }
 
