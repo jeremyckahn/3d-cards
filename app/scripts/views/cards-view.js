@@ -16,11 +16,7 @@ define([
 
   'use strict';
 
-  var ROWS = 1;
-  var COLUMNS = 1;
-  var LAYERS = 8;
   var LAYER_DEPTH = 500;
-  var Z_FADE_DISTANCE = LAYER_DEPTH * (LAYERS * 0.5);
 
   var CardsView = Backbone.View.extend({
     initialize: function () {
@@ -28,29 +24,25 @@ define([
       window.cardView = this;
 
       this._totalCards = 0;
-      this._card$els = {};
       this._sampledCardWidth = null;
       this._sampledCardHeight = null;
+      this._zFadeDistance = LAYER_DEPTH * (this.$el.children().length * 0.5);
 
-      _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
+      this.initCards();
       this.zoom(0);
       $(window).on('mousewheel', _.bind(this.onWindowMouseWheel, this));
     }
 
-    ,buildLayer: function (z) {
-      this._card$els[z] = {};
-      _.range(COLUMNS).forEach(_.bind(this.buildColumn, this, z));
+    ,initCards: function () {
+      this.$el.children().each(_.bind(function (i, el) {
+        this.initCard($(el));
+      }, this));
     }
 
-    ,buildColumn: function (z, y) {
-      this._card$els[z][y] = {};
-      _.range(ROWS).forEach(_.bind(this.buildRow, this, z, y));
-    }
-
-    ,buildRow: function (z, y, x) {
-      var $card = $(document.createElement('div'));
-      $card.addClass('card');
-
+    /**
+     * @param {jQuery} $card
+     */
+    ,initCard: function ($card) {
       if (this._sampledCardWidth === null) {
         this.measureAndStoreCardDimensions($card);
       }
@@ -60,7 +52,7 @@ define([
       var transformX =
           (quadrant === 0 || quadrant === 2) ? -100 : 100;
       var transformY = (quadrant < 2) ? -100 : 100;
-      var transformZ = z * -LAYER_DEPTH;
+      var transformZ = totalCards * -LAYER_DEPTH;
       this.applyTransform3d(
           $card, transformX + '%', transformY + '%', transformZ + 'px');
       $card.attr({
@@ -69,8 +61,6 @@ define([
         ,'data-z': transformZ
       });
 
-      this._card$els[z][y][x] = $card;
-      this.$el.append($card);
       this._totalCards++;
     }
 
@@ -101,9 +91,9 @@ define([
     ,applyZFade: function ($card, z) {
       var opacity;
       if (z < 0) {
-        opacity = 1 + (z / Z_FADE_DISTANCE);
+        opacity = 1 + (z / this._zFadeDistance);
       } else {
-        var boundedOpacity = Math.min(1, (z / Z_FADE_DISTANCE));
+        var boundedOpacity = Math.min(1, (z / this._zFadeDistance));
         opacity = 1 - boundedOpacity;
       }
 
@@ -138,10 +128,10 @@ define([
      * @return {number}
      */
     ,cycleZ: function (unboundedZ) {
-      var doubledThreshold = Z_FADE_DISTANCE * 2;
-      if (unboundedZ > Z_FADE_DISTANCE) {
+      var doubledThreshold = this._zFadeDistance * 2;
+      if (unboundedZ > this._zFadeDistance) {
         return unboundedZ - doubledThreshold;
-      } else if (unboundedZ < -Z_FADE_DISTANCE) {
+      } else if (unboundedZ < -this._zFadeDistance) {
         return unboundedZ + doubledThreshold;
       }
 

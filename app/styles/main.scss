@@ -21,14 +21,14 @@ $CARD_CONTAINER_HEIGHT: ($CARD_HEIGHT + ($CARD_MARGIN_Y * 2)) * $NUM_ROWS;
   @include transform-style(preserve-3d);
 }
 
-.card {
-  background: #ff8;
-  border: solid 1px #000;
-  float: left;
-  height: $CARD_HEIGHT;
-  left: 0;
-  margin: $CARD_MARGIN_Y $CARD_MARGIN_X;
-  position: absolute;
-  top: 0;
-  width: $CARD_WIDTH;
-}
+  .cards-container .card {
+    background: #ff8;
+    border: solid 1px #000;
+    float: left;
+    height: $CARD_HEIGHT;
+    left: 0;
+    margin: $CARD_MARGIN_Y $CARD_MARGIN_X;
+    position: absolute;
+    top: 0;
+    width: $CARD_WIDTH;
+  }
