@@ -76,27 +76,23 @@ define([
      * @param {jQuery} $card
      */
     ,focusCard: function ($card) {
-      this.$el.addClass('transition');
-      this.lock();
-
-      this.$el.find('.card.focused').removeClass('focused');
-      this.zoom(0);
-      $card.addClass('focused');
-      $card.css('opacity', 1);
-      this.applyTransform3d($card, 0, 0, 0);
-
-      setTimeout(_.bind(function () {
-        this.$el.removeClass('transition');
-        this.unlock();
-      }, this), CARD_TRANSITION_DURATION);
+      this.transition(function () {
+        this.$el.find('.card.focused').removeClass('focused');
+        this.zoom(0);
+        $card.addClass('focused');
+        $card.css('opacity', 1);
+        this.applyTransform3d($card, 0, 0, 0);
+      });
     }
 
     /**
      * @param {jQuery} $card
      */
     ,blurCard: function ($card) {
-      $card.removeClass('focused');
-      this.zoom(0);
+      this.transition(function () {
+        $card.removeClass('focused');
+        this.zoom(0);
+      });
     }
 
     /**
@@ -179,6 +175,19 @@ define([
 
     ,unlock: function () {
       this._isLocked = false;
+    }
+
+    /**
+     * @param {Function} modificationFn The function that causes a style change.
+     */
+    ,transition: function (modificationFn) {
+      this.$el.addClass('transition');
+      this.lock();
+      modificationFn.call(this);
+      setTimeout(_.bind(function () {
+        this.$el.removeClass('transition');
+        this.unlock();
+      }, this), CARD_TRANSITION_DURATION);
     }
 
     /**
