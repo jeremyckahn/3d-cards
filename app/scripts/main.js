@@ -28,7 +28,8 @@ require.config({
 
 require([
 
-  'backbone'
+  'jquery'
+  ,'backbone'
 
   ,'views/cards-view'
 
@@ -37,14 +38,19 @@ require([
 
 ], function (
 
-  Backbone
+  $
+  ,Backbone
 
   ,CardsView
 
 ) {
   Backbone.history.start();
 
+  var $cardsContainer = $('.cards-container');
+
   new CardsView({
-    el: document.querySelector('.cards-container')
+    el: $cardsContainer[0]
   });
+
+  $cardsContainer.removeClass('loading');
 });
