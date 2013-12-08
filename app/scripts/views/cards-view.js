@@ -31,6 +31,7 @@ define([
 
       this._totalCards = 0;
       this._isLocked = false;
+      this._isAnyCardFocused = false;
       this._sampledCardWidth = null;
       this._sampledCardHeight = null;
       this._zFadeDistance = LAYER_DEPTH * (this.$el.children().length * 0.5);
@@ -69,6 +70,7 @@ define([
         ,'data-y': transformY
         ,'data-z': transformZ
       });
+      $card.addClass('card');
 
       this._totalCards++;
     }
@@ -77,6 +79,8 @@ define([
      * @param {jQuery} $card
      */
     ,focusCard: function ($card) {
+      this._isAnyCardFocused = true;
+
       this.transition(function () {
         this.$el.find('.card.focused').removeClass('focused');
         this.zoom(0);
@@ -90,6 +94,8 @@ define([
      * @param {jQuery} $card
      */
     ,blurCard: function ($card) {
+      this._isAnyCardFocused = false;
+
       this.transition(function () {
         $card.removeClass('focused');
         this.zoom(0);
@@ -195,7 +201,7 @@ define([
     ,onWindowMouseWheel: function (evt) {
       evt.preventDefault();
 
-      if (!this._isLocked) {
+      if (!this._isLocked && !this._isAnyCardFocused) {
         this.zoom(evt.deltaY);
       }
     }
