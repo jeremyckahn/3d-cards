@@ -17,6 +17,8 @@ define([
   'use strict';
 
   var LAYER_DEPTH = 500;
+  // This MUST be kept in sync with $CARD_TRANSITION_DURATION in the Sass file.
+  var CARD_TRANSITION_DURATION = 300;
 
   var CardsView = Backbone.View.extend({
     events: {
@@ -28,6 +30,7 @@ define([
       window.cardView = this;
 
       this._totalCards = 0;
+      this._isLocked = false;
       this._sampledCardWidth = null;
       this._sampledCardHeight = null;
       this._zFadeDistance = LAYER_DEPTH * (this.$el.children().length * 0.5);
@@ -73,11 +76,19 @@ define([
      * @param {jQuery} $card
      */
     ,focusCard: function ($card) {
+      this.$el.addClass('transition');
+      this.lock();
+
       this.$el.find('.card.focused').removeClass('focused');
       this.zoom(0);
       $card.addClass('focused');
       $card.css('opacity', 1);
       this.applyTransform3d($card, 0, 0, 0);
+
+      setTimeout(_.bind(function () {
+        this.$el.removeClass('transition');
+        this.unlock();
+      }, this), CARD_TRANSITION_DURATION);
     }
 
     /**
@@ -162,18 +173,33 @@ define([
       return unboundedZ;
     }
 
+    ,lock: function () {
+      this._isLocked = true;
+    }
+
+    ,unlock: function () {
+      this._isLocked = false;
+    }
+
     /**
      * @param {jQuery.Event} evt
      */
     ,onWindowMouseWheel: function (evt) {
       evt.preventDefault();
-      this.zoom(evt.deltaY);
+
+      if (!this._isLocked) {
+        this.zoom(evt.deltaY);
+      }
     }
 
     /**
      * @param {jQuery.Event} evt
      */
     ,onClickCard: function (evt) {
+      if (this._isLocked) {
+        return;
+      }
+
       var $card = $(evt.currentTarget);
 
       if ($card.hasClass('focused')) {
