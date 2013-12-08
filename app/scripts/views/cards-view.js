@@ -100,10 +100,8 @@ define([
      * @param {jQuery} $card
      */
     ,measureAndStoreCardDimensions: function ($card) {
-      this.$el.append($card);
       this._sampledCardWidth = $card.outerWidth(true);
       this._sampledCardHeight = $card.outerHeight(true);
-      $card.remove();
     }
 
     /**
