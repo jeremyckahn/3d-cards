@@ -39,6 +39,7 @@ define([
       this.zoom(0);
 
       $(window).on('mousewheel', _.bind(this.onWindowMouseWheel, this));
+      $(window).on('click', _.bind(this.onWindowClick, this));
     }
 
     ,initCards: function () {
@@ -198,6 +199,13 @@ define([
 
       if (!this._isLocked) {
         this.zoom(evt.deltaY);
+      }
+    }
+
+    ,onWindowClick: function () {
+      var $focusedCard = this.$el.find('.focused');
+      if ($focusedCard.length && !this._isLocked) {
+        this.blurCard($focusedCard);
       }
     }
 
