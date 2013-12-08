@@ -85,8 +85,10 @@ define([
         this.$el.find('.card.focused').removeClass('focused');
         this.zoom(0);
         $card.addClass('focused');
-        $card.css('opacity', 1);
-        this.applyTransform3d($card, 0, 0, 0);
+
+        // Remove transform and opacity styles to return the card to its
+        // default state.
+        $card.css({ transform: '', opacity: '' });
       });
     }
 
