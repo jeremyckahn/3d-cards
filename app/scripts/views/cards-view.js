@@ -16,41 +16,42 @@ define([
 
   'use strict';
 
-  var ROWS = 1;
-  var COLUMNS = 1;
-  var LAYERS = 8;
   var LAYER_DEPTH = 500;
-  var Z_FADE_DISTANCE = LAYER_DEPTH * (LAYERS * 0.5);
+  // This MUST be kept in sync with $CARD_TRANSITION_DURATION in the Sass file.
+  var CARD_TRANSITION_DURATION = 300;
 
   var CardsView = Backbone.View.extend({
-    initialize: function () {
+    events: {
+      'click .card': 'onClickCard'
+    }
+
+    ,initialize: function () {
       // TODO: For debugging.  Remove this.
       window.cardView = this;
 
       this._totalCards = 0;
-      this._card$els = {};
+      this._isLocked = false;
       this._sampledCardWidth = null;
       this._sampledCardHeight = null;
+      this._zFadeDistance = LAYER_DEPTH * (this.$el.children().length * 0.5);
 
-      _.range(LAYERS).forEach(_.bind(this.buildLayer, this));
+      this.initCards();
       this.zoom(0);
+
       $(window).on('mousewheel', _.bind(this.onWindowMouseWheel, this));
+      $(window).on('click', _.bind(this.onWindowClick, this));
     }
 
-    ,buildLayer: function (z) {
-      this._card$els[z] = {};
-      _.range(COLUMNS).forEach(_.bind(this.buildColumn, this, z));
+    ,initCards: function () {
+      this.$el.children().each(_.bind(function (i, el) {
+        this.initCard($(el));
+      }, this));
     }
 
-    ,buildColumn: function (z, y) {
-      this._card$els[z][y] = {};
-      _.range(ROWS).forEach(_.bind(this.buildRow, this, z, y));
-    }
-
-    ,buildRow: function (z, y, x) {
-      var $card = $(document.createElement('div'));
-      $card.addClass('card');
-
+    /**
+     * @param {jQuery} $card
+     */
+    ,initCard: function ($card) {
       if (this._sampledCardWidth === null) {
         this.measureAndStoreCardDimensions($card);
       }
@@ -60,7 +61,7 @@ define([
       var transformX =
           (quadrant === 0 || quadrant === 2) ? -100 : 100;
       var transformY = (quadrant < 2) ? -100 : 100;
-      var transformZ = z * -LAYER_DEPTH;
+      var transformZ = totalCards * -LAYER_DEPTH;
       this.applyTransform3d(
           $card, transformX + '%', transformY + '%', transformZ + 'px');
       $card.attr({
@@ -69,19 +70,38 @@ define([
         ,'data-z': transformZ
       });
 
-      this._card$els[z][y][x] = $card;
-      this.$el.append($card);
       this._totalCards++;
     }
 
     /**
      * @param {jQuery} $card
      */
+    ,focusCard: function ($card) {
+      this.transition(function () {
+        this.$el.find('.card.focused').removeClass('focused');
+        this.zoom(0);
+        $card.addClass('focused');
+        $card.css('opacity', 1);
+        this.applyTransform3d($card, 0, 0, 0);
+      });
+    }
+
+    /**
+     * @param {jQuery} $card
+     */
+    ,blurCard: function ($card) {
+      this.transition(function () {
+        $card.removeClass('focused');
+        this.zoom(0);
+      });
+    }
+
+    /**
+     * @param {jQuery} $card
+     */
     ,measureAndStoreCardDimensions: function ($card) {
-      this.$el.append($card);
       this._sampledCardWidth = $card.outerWidth(true);
       this._sampledCardHeight = $card.outerHeight(true);
-      $card.remove();
     }
 
     /**
@@ -101,9 +121,9 @@ define([
     ,applyZFade: function ($card, z) {
       var opacity;
       if (z < 0) {
-        opacity = 1 + (z / Z_FADE_DISTANCE);
+        opacity = 1 + (z / this._zFadeDistance);
       } else {
-        var boundedOpacity = Math.min(1, (z / Z_FADE_DISTANCE));
+        var boundedOpacity = Math.min(1, (z / this._zFadeDistance));
         opacity = 1 - boundedOpacity;
       }
 
@@ -138,14 +158,35 @@ define([
      * @return {number}
      */
     ,cycleZ: function (unboundedZ) {
-      var doubledThreshold = Z_FADE_DISTANCE * 2;
-      if (unboundedZ > Z_FADE_DISTANCE) {
+      var doubledThreshold = this._zFadeDistance * 2;
+      if (unboundedZ > this._zFadeDistance) {
         return unboundedZ - doubledThreshold;
-      } else if (unboundedZ < -Z_FADE_DISTANCE) {
+      } else if (unboundedZ < -this._zFadeDistance) {
         return unboundedZ + doubledThreshold;
       }
 
       return unboundedZ;
+    }
+
+    ,lock: function () {
+      this._isLocked = true;
+    }
+
+    ,unlock: function () {
+      this._isLocked = false;
+    }
+
+    /**
+     * @param {Function} modificationFn The function that causes a style change.
+     */
+    ,transition: function (modificationFn) {
+      this.$el.addClass('transition');
+      this.lock();
+      modificationFn.call(this);
+      setTimeout(_.bind(function () {
+        this.$el.removeClass('transition');
+        this.unlock();
+      }, this), CARD_TRANSITION_DURATION);
     }
 
     /**
@@ -153,7 +194,34 @@ define([
      */
     ,onWindowMouseWheel: function (evt) {
       evt.preventDefault();
-      this.zoom(evt.deltaY);
+
+      if (!this._isLocked) {
+        this.zoom(evt.deltaY);
+      }
+    }
+
+    ,onWindowClick: function () {
+      var $focusedCard = this.$el.find('.focused');
+      if ($focusedCard.length && !this._isLocked) {
+        this.blurCard($focusedCard);
+      }
+    }
+
+    /**
+     * @param {jQuery.Event} evt
+     */
+    ,onClickCard: function (evt) {
+      if (this._isLocked) {
+        return;
+      }
+
+      var $card = $(evt.currentTarget);
+
+      if ($card.hasClass('focused')) {
+        this.blurCard($card);
+      } else {
+        this.focusCard($card);
+      }
     }
   });
 
