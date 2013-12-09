@@ -16,11 +16,15 @@ require.config({
     bootstrap: {
       deps: ['jquery']
       ,exports: 'jquery'
+    },
+    'jquery.vertigo': {
+      deps: ['jquery']
     }
   },
   paths: {
     jquery: '../bower_components/jquery/jquery'
     ,'jquery.mousewheel': '../bower_components/jquery-mousewheel/jquery.mousewheel'
+    ,'jquery.vertigo': '../bower_components/vertigo/src/vertigo'
     ,backbone: '../bower_components/backbone/backbone'
     ,underscore: '../bower_components/underscore/underscore'
   }
@@ -31,26 +35,20 @@ require([
   'jquery'
   ,'backbone'
 
-  ,'views/cards-view'
-
   // Plugins that don't return anything
   ,'jquery.mousewheel'
+  ,'jquery.vertigo'
 
 ], function (
 
   $
   ,Backbone
 
-  ,CardsView
-
 ) {
   Backbone.history.start();
 
   var $cardsContainer = $('.cards-container');
-
-  new CardsView({
-    el: $cardsContainer[0]
-  });
-
-  $cardsContainer.removeClass('loading');
+  $cardsContainer
+    .vertigo()
+    .removeClass('loading');
 });
